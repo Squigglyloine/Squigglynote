@@ -1,0 +1,81 @@
+#Input challenge
+
+name = input("What's your name? ")
+favFood = input("What's your favorite food? ")
+favMusic = input("What's your favorite song?   ")
+live = input("Where do you live?????    ")
+
+print("Hi", name + ", your favorite food is" , favFood + ", your favorite song is " + favMusic + ". I also know where you live 😈, you live in" , live + ".")
+
+
+#Day 1 -> Wacky recipe challenge
+
+print()
+import timeDay 1
+
+import random
+print("Let's make a wacky recipe!   ")
+time.sleep(2)
+chosenFood = input("Choose a food you want in your recipe!  ")
+chosenPlant = input("Choose a plant you want in your recipe!    ")
+cookingWay = input("Choose a way to cook your ingredients!  ")
+foodDesc = input("What word describes disgusting food?  ")
+diyItem = input("Name a DIY item!   ")
+print()
+print("MENU")
+print()
+print(cookingWay,chosenFood, "with", foodDesc, chosenPlant, "served with a handful of "+ diyItem + "s")
+print("PRICE:",random.randint(10,25))
+
+https://www.programiz.com/online-compiler/8kBij9Dz7AUNS
+
+
+
+
+
+
+
+
+
+Day 3
+
+import random
+playing = "y"
+while playing == "y":
+    iOne = random.randint(15,25)
+    iTwo = random.randint(25,35)
+    print("What is " + str(iOne) + " multiplied by " + str(iTwo) + "?")
+    userAnswer = input()
+    if userAnswer == iOne * iTwo:
+        print("Correct Answer! Keep playing? (y/n)")
+        playing = input()
+        if playing == "y":
+            print()
+    else:
+        print("The answer was " + str(intOne * intTwo))
+
+print("Generation Identifier")
+print()
+birthYear = int(input("Which year where you born?   "))
+if birthYear >= 2012 and birthYear <= 2025:
+    print("Ah, tung tung tung sahur. And the growing popularity of AI slop")
+elif birthYear >= 1997 and birthYear <= 2011:
+    print("The year where smartphones were created and most social media apps were created")
+elif birthYear >= 1981 and birthYear <= 1996:
+    print("The actual smartest generation with the highest IQ in the generation than any other!!")
+elif birthYear >= 1965 and birthYear <= 1980:
+    print("The rise of the personal computer and the freedom for all races and gender")
+elif birthYear >= 1946 and birthYear <= 1964:
+    print("The world suffered lower birth rates and the generation contained the most divorce rates too.")
+elif birthYear >= 1928 and birthYear <= 1945:
+print("Loan Calculator")
+money = float(input("How much money "))
+years = int(input("For how many years?  "))
+aprRate = float(input("At what rate "))
+total = money
+year = 0
+for i in range(years):
+    year += 1
+    print(f"At year {year} the money is around {round(total)}")
+    total = total * aprRate
+print(f"You lost around {round(total - money)} dollars with a rate of {aprRate}")

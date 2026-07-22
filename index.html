@@ -5,14 +5,183 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Squiggly Note</title>
 <style>
-:root{--bg:#f2eee6;--paper:#fffdf9;--ink:#111;--muted:#68645d;--line:#d7d0c5;--soft:#ebe5da;--r:14px}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif}body.dark{--bg:#111;--paper:#1a1a1a;--ink:#fafafa;--muted:#bbb;--line:#444;--soft:#292929}button,input,select{font:inherit}button{cursor:pointer}.shell{width:min(1160px,calc(100% - 32px));margin:auto}.landing{min-height:100vh;padding-bottom:60px}.nav,.topbar{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-size:1.15rem;font-weight:800;letter-spacing:-.06em}.actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--ink);padding:8px 11px;font-size:.82rem}.btn:hover{background:var(--soft)}.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--paper)}body.dark .btn.primary{color:#111}.gear{display:inline-grid;place-items:center;width:37px;height:35px;padding:0}.hero{display:grid;grid-template-columns:1fr .82fr;gap:58px;align-items:center;padding:72px 0}.eyebrow{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}.hero h1{font-size:clamp(3.4rem,7vw,6rem);letter-spacing:-.075em;line-height:.93;margin:12px 0 20px}.hero p,.feature p{line-height:1.6;color:var(--muted)}.hero-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:26px}.preview,.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r)}.preview{padding:28px;min-height:340px}.preview h2{letter-spacing:-.05em}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.feature{padding:19px}.app{display:none;width:min(1220px,calc(100% - 28px));margin:auto;padding-bottom:34px}.app.visible{display:block}.layout{display:grid;grid-template-columns:255px 1fr 220px;gap:14px}.sidebar,.timeline{padding:14px}.sidebar-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.sidebar h2,.timeline h2{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:8px 0}.notes-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.notes-actions .btn{padding:7px 8px;font-size:.75rem}.tabs{display:grid;gap:5px;margin-top:16px}.tab{border:0;border-radius:8px;background:transparent;color:var(--muted);padding:10px;text-align:left;flex:1}.tab.active,.tab:hover{background:var(--soft);color:var(--ink)}.workspace{overflow:hidden}.workspace-head{display:flex;justify-content:space-between;min-height:56px;align-items:center;padding:0 18px;border-bottom:1px solid var(--line)}.save{font-size:.78rem;color:var(--muted)}.editor-wrap{padding:22px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.toolbar label{font-size:.75rem;color:var(--muted);font-weight:700}.title{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);font-size:2rem;font-weight:750;letter-spacing:-.05em;padding:6px 0 14px;outline:0}.editor{min-height:420px;padding-top:18px;outline:0;font:1.04rem/1.75 Georgia,serif;white-space:pre-wrap}.editor:empty:before{content:attr(data-placeholder);color:var(--muted)}.timeline ul{padding:0;margin:14px 0;list-style:none;color:var(--muted);font-size:.8rem;line-height:1.6}.timeline li{padding:8px 0;border-bottom:1px solid var(--line)}.status{min-height:20px;margin-top:14px;font-size:.8rem;color:var(--muted)}.status.error{color:#a33}.status.good{color:#397047}.dialog{width:min(410px,calc(100% - 28px));border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);padding:22px;box-shadow:0 20px 60px #0005}.dialog::backdrop{background:#0008;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}.dialog h2{margin:0 0 6px}.dialog p{color:var(--muted);line-height:1.5;font-size:.9rem}.settings-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);font-size:.9rem}.choices{display:flex;gap:5px}.choices button{border:1px solid var(--line);border-radius:6px;background:transparent;color:var(--ink);padding:6px 8px;font-size:.76rem}.choices button.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}body.dark .choices button.active{color:#111}.dialog-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:18px}body.clean{--bg:#fafafa;--paper:#fff;--soft:#f0f0f0}body.sans .editor{font-family:Inter,system-ui,sans-serif;line-height:1.7}body.large .editor{font-size:1.18rem}@media(max-width:900px){.hero{grid-template-columns:1fr}.layout{grid-template-columns:230px 1fr}.timeline{display:none}}@media(max-width:650px){.hero{padding:42px 0}.features,.layout{grid-template-columns:1fr}.topbar{align-items:flex-start;padding:8px 0}.actions{gap:5px}.actions .btn{padding:7px 8px}.sidebar{min-height:0}.editor-wrap{padding:16px}.hero h1{font-size:3.7rem}}
+:root {
+  /* Base Typography & Spacing */
+  --ink: #1e1e1e;
+  --muted: #595959;
+  --r: 16px;
+  
+  /* Liquid Glass (Light Theme) */
+  --page-bg: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* Fallback clean background */
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-sheen: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 100%);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-border-soft: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --glass-hover: rgba(255, 255, 255, 0.65);
+  
+  /* Primary accents */
+  --primary: rgba(30, 30, 30, 0.85);
+  --primary-text: #fff;
+}
+
+/* Warm Light Background */
+body { --page-bg: linear-gradient(120deg, #fdf4eb 0%, #f7e6e8 100%); }
+/* Clean Light Background */
+body.clean { --page-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+
+/* Dark Mode Liquid Glass */
+body.dark {
+  --ink: #fafafa;
+  --muted: #a3a3a3;
+  --glass-bg: rgba(20, 20, 20, 0.45);
+  --glass-sheen: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 100%);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-soft: rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  --glass-hover: rgba(40, 40, 40, 0.65);
+  
+  --primary: rgba(255, 255, 255, 0.9);
+  --primary-text: #111;
+  --page-bg: linear-gradient(135deg, #1f1c2c 0%, #928dab 100%); /* Warm dark */
+}
+/* Clean Dark Background */
+body.dark.clean { --page-bg: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--page-bg);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  min-height: 100vh;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; transition: all 0.2s ease; }
+.shell { width: min(1160px, calc(100% - 32px)); margin: auto; }
+.landing { min-height: 100vh; padding-bottom: 60px; }
+
+/* The Glass Mixin Class (applied to UI components) */
+.glass-panel {
+  background: var(--glass-bg);
+  background-image: var(--glass-sheen);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--r);
+}
+
+.nav, .topbar { min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 10px; }
+.topbar { padding: 12px 20px; margin-bottom: 24px; border-radius: 0 0 var(--r) var(--r); }
+.topbar.glass-panel { border-top: none; border-radius: 0 0 24px 24px; }
+.brand { font-size: 1.15rem; font-weight: 800; letter-spacing: -.06em; }
+.actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+
+/* Glass Buttons */
+.btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 8px;
+  color: var(--ink);
+  padding: 8px 12px;
+  font-size: .85rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.btn:hover { background: var(--glass-hover); transform: translateY(-1px); }
+.btn.primary { background: var(--primary); border-color: transparent; color: var(--primary-text); backdrop-filter: none; }
+.btn.primary:hover { opacity: 0.9; }
+.gear { display: inline-grid; place-items: center; width: 37px; height: 36px; padding: 0; font-size: 1.2rem; }
+
+.hero { display: grid; grid-template-columns: 1fr .82fr; gap: 58px; align-items: center; padding: 72px 0; }
+.eyebrow { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.hero h1 { font-size: clamp(3.4rem, 7vw, 6rem); letter-spacing: -.075em; line-height: 1; margin: 12px 0 20px; }
+.hero p, .feature p { line-height: 1.6; color: var(--muted); }
+.hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-top: 26px; }
+
+.preview { padding: 32px; min-height: 340px; }
+.preview h2 { letter-spacing: -.05em; }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.feature { padding: 24px; }
+
+.app { display: none; width: min(1220px, calc(100% - 28px)); margin: auto; padding-bottom: 34px; }
+.app.visible { display: block; }
+.layout { display: grid; grid-template-columns: 255px 1fr 220px; gap: 16px; align-items: start; }
+.sidebar, .timeline { padding: 18px; }
+.sidebar-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+.sidebar h2, .timeline h2 { font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 8px 0; }
+.notes-actions { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+.notes-actions .btn { padding: 7px 8px; font-size: .75rem; }
+
+.tabs { display: grid; gap: 6px; margin-top: 16px; }
+.tab { border: 0; border-radius: 8px; background: transparent; color: var(--muted); padding: 10px; text-align: left; flex: 1; transition: background 0.2s; }
+.tab.active, .tab:hover { background: var(--glass-hover); color: var(--ink); font-weight: 500; }
+
+.workspace { overflow: hidden; display: flex; flex-direction: column; }
+.workspace-head { display: flex; justify-content: space-between; min-height: 60px; align-items: center; padding: 0 22px; border-bottom: 1px solid var(--glass-border-soft); }
+.save { font-size: .78rem; color: var(--muted); }
+.editor-wrap { padding: 26px; flex: 1; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 20px; }
+.toolbar label { font-size: .75rem; color: var(--muted); font-weight: 700; }
+.title { width: 100%; border: 0; border-bottom: 1px solid var(--glass-border-soft); background: transparent; color: var(--ink); font-size: 2.2rem; font-weight: 750; letter-spacing: -.05em; padding: 6px 0 16px; outline: 0; }
+.title::placeholder { color: var(--muted); opacity: 0.6; }
+.editor { min-height: 420px; padding-top: 20px; outline: 0; font: 1.05rem/1.8 Georgia, serif; white-space: pre-wrap; }
+.editor:empty:before { content: attr(data-placeholder); color: var(--muted); opacity: 0.6; }
+
+.timeline ul { padding: 0; margin: 14px 0; list-style: none; color: var(--muted); font-size: .8rem; line-height: 1.6; }
+.timeline li { padding: 10px 0; border-bottom: 1px solid var(--glass-border-soft); }
+.status { min-height: 20px; margin-top: 14px; font-size: .8rem; color: var(--muted); }
+.status.error { color: #d75a5a; font-weight: 600; }
+.status.good { color: #439659; font-weight: 600; }
+
+/* Liquid Glass Dialogs */
+.dialog { width: min(420px, calc(100% - 28px)); color: var(--ink); padding: 28px; outline: none; }
+.dialog::backdrop { background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.dialog h2 { margin: 0 0 8px; letter-spacing: -.03em; }
+.dialog p { color: var(--muted); line-height: 1.5; font-size: .95rem; }
+
+.settings-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; border-top: 1px solid var(--glass-border-soft); font-size: .95rem; }
+.choices { display: flex; gap: 6px; }
+.choices button { border: 1px solid var(--glass-border); border-radius: 8px; background: var(--glass-bg); color: var(--ink); padding: 6px 10px; font-size: .8rem; transition: all 0.2s; }
+.choices button.active { background: var(--primary); border-color: var(--primary); color: var(--primary-text); }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
+
+/* Form Inputs inside Glass */
+input[type="email"], input[type="password"], input[type="url"], input[type="text"] {
+  width: 100%; margin-top: 8px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--glass-bg); color: var(--ink); padding: 12px; outline: 0; font-size: .9rem; transition: border 0.2s, background 0.2s;
+}
+input:focus { border-color: var(--muted); background: var(--glass-hover); }
+
+/* Chat Dialog Specific Styles */
+.chat-dialog { width: min(480px, calc(100% - 28px)); padding: 22px; display: flex; flex-direction: column; max-height: 85vh; }
+.chat-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border-soft); padding-bottom: 14px; margin-bottom: 14px; }
+.chat-header h2 { margin: 0; font-size: 1.15rem; }
+.chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; min-height: 350px; padding: 14px; background: rgba(0,0,0,0.02); border: 1px inset var(--glass-border-soft); border-radius: 12px; margin-bottom: 16px; }
+.msg { padding: 10px 14px; border-radius: 14px; font-size: .9rem; line-height: 1.5; max-width: 85%; word-wrap: break-word; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+.msg.user { background: var(--primary); color: var(--primary-text); align-self: flex-end; border-bottom-right-radius: 4px; }
+.msg.bot { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--ink); align-self: flex-start; border-bottom-left-radius: 4px; backdrop-filter: blur(4px); }
+.chat-input-area { display: flex; gap: 10px; }
+
+body.sans .editor { font-family: Inter, system-ui, sans-serif; line-height: 1.7; }
+body.large .editor { font-size: 1.25rem; }
+
+@media(max-width:900px){ .hero{grid-template-columns:1fr} .layout{grid-template-columns:230px 1fr} .timeline{display:none} }
+@media(max-width:650px){
+  .hero{padding:42px 0} .features, .layout{grid-template-columns:1fr}
+  .topbar{flex-direction:column; align-items:flex-start; padding:16px}
+  .actions{margin-top:12px; width:100%; justify-content:flex-start;}
+  .editor-wrap{padding:20px} .hero h1{font-size:3.7rem}
+}
 </style>
 </head>
 <body>
 
 <section class="landing" id="landing">
   <div class="shell">
-    <nav class="nav">
+    <nav class="nav glass-panel" style="margin-top: 16px; border-radius: 20px;">
       <div class="brand">Squiggly Note</div>
       <div class="actions">
         <button class="btn" id="signIn">Sign in</button>
@@ -30,28 +199,29 @@
           <span class="eyebrow" id="identity">Your personal workspace</span>
         </div>
       </div>
-      <article class="preview">
+      <article class="preview glass-panel">
         <div class="eyebrow">Idea</div>
         <h2>New concept, name "Squiggly note"</h2>
         <p>Something that was never there when you needed it, a place for those midnight thoughts. Let them go, forget, then revisit. Progress the world faster, don't waste time trying to remeber the idea you already made. No complete thoughts, just for you.</p>
       </article>
     </main>
     <section class="features">
-      <article class="card feature"><b>Multiple ways to notetake</b><p>Take notes in whatever way you want, with full customizability. Choose from AI notetaking, voice recordings, AI voice transcription, conciseness, and manual.</p></article>
-      <article class="card feature"><b>Make it shorter</b><p>Use your optional AI endpoint when a draft needs clarity.</p></article>
-      <article class="card feature"><b>Your settings</b><p>Choose the theme and typography that feel right.</p></article>
+      <article class="feature glass-panel"><b>Multiple ways to notetake</b><p>Take notes in whatever way you want, with full customizability. Choose from AI notetaking, voice recordings, AI voice transcription, conciseness, and manual.</p></article>
+      <article class="feature glass-panel"><b>Make it shorter</b><p>Use your optional AI endpoint when a draft needs clarity.</p></article>
+      <article class="feature glass-panel"><b>Your settings</b><p>Choose the theme and typography that feel right.</p></article>
     </section>
   </div>
 </section>
 
 <main class="app" id="app">
-  <header class="topbar">
+  <header class="topbar glass-panel">
     <div>
       <div class="brand">Squiggly Note</div>
       <div class="eyebrow" id="workspaceIdentity">Your workspace</div>
-      <div class="eyebrow" id="usageTimer" style="margin-top:4px;"></div>
+      <div class="eyebrow" id="usageTimer" style="margin-top:6px; opacity: 0.8;"></div>
     </div>
     <div class="actions">
+      <button class="btn primary" id="openChatBtn">Chat with AI</button>
       <button class="btn" id="adminBtn">Admin Access</button>
       <button class="btn" id="account">Account</button>
       <button class="btn" id="back">Log out</button>
@@ -60,7 +230,7 @@
     </div>
   </header>
   <section class="layout">
-    <aside class="card sidebar">
+    <aside class="sidebar glass-panel">
       <div class="sidebar-head">
         <h2>Notes</h2>
         <div class="notes-actions">
@@ -71,7 +241,7 @@
       </div>
       <div class="tabs" id="tabs"></div>
     </aside>
-    <section class="card workspace">
+    <section class="workspace glass-panel">
       <div class="workspace-head">
         <strong id="noteLabel">Untitled note</strong>
         <span class="save" id="saveState">Saved</span>
@@ -89,71 +259,81 @@
         <div class="status" id="status"></div>
       </div>
     </section>
-    <aside class="card timeline">
+    <aside class="timeline glass-panel">
       <h2>Timeline</h2>
       <ul id="timeline"></ul>
-      <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line)">
+      <div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--glass-border-soft)">
         <label class="eyebrow" for="apiTunnel">API tunnel</label>
-        <input id="apiTunnel" type="url" inputmode="url" placeholder="https://your-tunnel.example" aria-label="API tunnel URL" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--ink);padding:9px;font-size:.78rem;outline:0">
-        <p style="margin:8px 0 0;font-size:.75rem;color:var(--muted);line-height:1.4">Used for concise and future transcription APIs.</p>
+        <input id="apiTunnel" type="url" inputmode="url" placeholder="https://your-tunnel.example" aria-label="API tunnel URL">
+        <p style="margin:8px 0 0;font-size:.75rem;color:var(--muted);line-height:1.4">Used for concise, transcription, and chatbot APIs.</p>
       </div>
-      <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--line)">
+      <div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--glass-border-soft)">
         <label class="eyebrow" for="openaiKey">OpenAI API key</label>
-        <input id="openaiKey" type="password" autocomplete="off" placeholder="sk-… (session only)" aria-label="OpenAI API key" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--ink);padding:9px;font-size:.78rem;outline:0">
-        <p style="margin:8px 0 0;font-size:.75rem;color:var(--muted);line-height:1.4">Temporary fallback for Make concise. Stored only until this tab session ends.</p>
+        <input id="openaiKey" type="password" autocomplete="off" placeholder="sk-… (session only)" aria-label="OpenAI API key">
+        <p style="margin:8px 0 0;font-size:.75rem;color:var(--muted);line-height:1.4">Temporary fallback. Stored only until this tab session ends.</p>
       </div>
     </aside>
   </section>
 </main>
 
-<dialog class="dialog" id="settingsDialog">
+<!-- Chatbot Dialog -->
+<dialog class="dialog glass-panel chat-dialog" id="chatDialog">
+  <div class="chat-header">
+    <h2>SquigglyBot</h2>
+    <button class="btn" id="closeChatBtn">Close</button>
+  </div>
+  <div class="chat-history" id="chatHistory">
+    <div class="msg bot">Hello! I'm SquigglyBot. Ask me questions, tell me to draft ideas, or just chat!</div>
+  </div>
+  <form id="chatForm" class="chat-input-area" onsubmit="event.preventDefault(); sendChatMessage();">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Message SquigglyBot..." autocomplete="off" style="margin-top: 0;">
+    <button type="submit" class="btn primary" id="chatSendBtn">Send</button>
+  </form>
+</dialog>
+
+<dialog class="dialog glass-panel" id="settingsDialog">
   <h2>Settings</h2>
   <p>We want the most customization possible for you.</p>
   <div class="settings-row"><span>Theme</span><div class="choices"><button data-key="theme" data-value="light">Light</button><button data-key="theme" data-value="dark">Dark</button></div></div>
-  <div class="settings-row"><span>Background</span><div class="choices"><button data-key="background" data-value="warm">Warm</button><button data-key="background" data-value="clean">White</button></div></div>
+  <div class="settings-row"><span>Background</span><div class="choices"><button data-key="background" data-value="warm">Warm</button><button data-key="background" data-value="clean">Clean</button></div></div>
   <div class="settings-row"><span>Editor font</span><div class="choices"><button data-key="font" data-value="serif">Serif</button><button data-key="font" data-value="sans">Sans</button></div></div>
   <div class="settings-row"><span>Text size</span><div class="choices"><button data-key="size" data-value="regular">Regular</button><button data-key="size" data-value="large">Large</button></div></div>
   <div class="dialog-actions"><button class="btn" id="closeSettings">Done</button></div>
 </dialog>
 
-<dialog class="dialog" id="confirmDialog">
+<dialog class="dialog glass-panel" id="confirmDialog">
   <h2 id="confirmTitle">Are you sure?</h2>
   <p id="confirmCopy"></p>
   <div class="dialog-actions"><button class="btn" id="cancelConfirm">Cancel</button><button class="btn primary" id="confirmAction">Confirm</button></div>
 </dialog>
 
-<!-- Main Login Dialog -->
-<dialog class="dialog" id="accountDialog">
+<dialog class="dialog glass-panel" id="accountDialog">
   <h2>Sign in</h2>
-  <p>Create or sign into a workspace.</p>
-  
-  <label for="accountEmail" class="eyebrow" style="margin-top:12px;display:block;">Username or Email</label>
-  <input id="accountEmail" type="text" autocomplete="username" placeholder="your_username" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--ink);padding:10px;outline:0">
-  
+  <p>Sign in using a valid email address to access your workspace.</p>
+  <label for="accountEmail" class="eyebrow" style="margin-top:16px;display:block;">Email address</label>
+  <input id="accountEmail" type="email" autocomplete="email" placeholder="you@example.com">
   <div class="dialog-actions"><button class="btn" id="cancelAccount">Cancel</button><button class="btn primary" id="saveAccount">Continue</button></div>
 </dialog>
 
-<!-- Admin Login Dialog -->
-<dialog class="dialog" id="adminDialog">
+<dialog class="dialog glass-panel" id="adminDialog">
   <h2>Administrator Login</h2>
   <p>Enter the admin password for unlimited prompts.</p>
-  <label for="adminPassword" class="eyebrow" style="margin-top:12px;display:block;">Admin Password</label>
-  <input id="adminPassword" type="password" placeholder="•••••••••••••" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--ink);padding:10px;outline:0">
-  
+  <label for="adminPassword" class="eyebrow" style="margin-top:16px;display:block;">Admin Password</label>
+  <input id="adminPassword" type="password" placeholder="•••••••••••••">
   <div class="dialog-actions"><button class="btn" id="cancelAdmin">Cancel</button><button class="btn primary" id="saveAdmin">Unlock</button></div>
 </dialog>
 
-<dialog class="dialog" id="feedbackDialog">
+<dialog class="dialog glass-panel" id="feedbackDialog">
   <div class="eyebrow">Action needed</div>
   <h2 id="feedbackTitle" style="margin-top:8px">Something went wrong</h2>
   <p id="feedbackMessage"></p>
-  <p id="feedbackSuggestion" style="padding:10px 12px;background:var(--soft);border-radius:8px;color:var(--ink)"></p>
+  <p id="feedbackSuggestion" style="padding:12px 14px;background:rgba(0,0,0,0.05);border-radius:8px;color:var(--ink);border:1px solid var(--glass-border-soft);"></p>
   <div class="dialog-actions"><button class="btn primary" id="closeFeedback">Got it</button></div>
 </dialog>
 
 <script>
 const KEY='squiggly-workspace-v4', PREF='squiggly-preferences-v2', ACCOUNT='squiggly-account-v1', BAN_KEY='squiggly-bans-v1';
-const PROMPTS_KEY = 'squiggly-prompts-usage';
+const PROMPTS_KEY = 'squiggly-prompts-usage-global';
 const PROMPT_LIMIT = 10;
 const $ = s => document.querySelector(s);
 const blank = () => ({id:crypto.randomUUID(),title:'Untitled note',body:'',created:Date.now(),edited:Date.now(),events:[]});
@@ -197,14 +377,13 @@ function showLanding(){
 // Prompt Limits Logic
 function getPromptCount() {
   let history = JSON.parse(localStorage.getItem(PROMPTS_KEY) || '[]');
-  // Filter out prompts older than 1 hour (3,600,000 ms)
   history = history.filter(t => (Date.now() - t) < 3600000);
   localStorage.setItem(PROMPTS_KEY, JSON.stringify(history));
   return history.length;
 }
 
 function recordPrompt() {
-  if (isAdmin) return; // Admins don't get logged towards the limit
+  if (isAdmin) return; 
   let history = JSON.parse(localStorage.getItem(PROMPTS_KEY) || '[]');
   history.push(Date.now());
   localStorage.setItem(PROMPTS_KEY, JSON.stringify(history));
@@ -220,11 +399,11 @@ function updateUsageDisplay() {
   const display = $('#usageTimer');
   if (isAdmin) {
     display.textContent = 'Admin Mode - Unlimited Prompts';
-    display.style.color = 'var(--ink)';
+    display.style.color = 'var(--primary)';
   } else {
     const used = getPromptCount();
     display.textContent = `${used}/${PROMPT_LIMIT} prompts used this hour`;
-    display.style.color = used >= PROMPT_LIMIT ? '#a33' : 'var(--muted)';
+    display.style.color = used >= PROMPT_LIMIT ? '#d75a5a' : 'inherit';
   }
 }
 
@@ -232,7 +411,6 @@ function showApp(){
   landing.hidden = true;
   app.classList.add('visible');
   updateUsageDisplay();
-  // Keep the display accurate as old prompts expire
   displayTimer = setInterval(updateUsageDisplay, 60000);
   render();
 }
@@ -255,7 +433,7 @@ function openConfirm(title,copy,fn){
   $('#confirmDialog').showModal();
 }
 
-// User Authentication Flow 
+// User Authentication Flow
 const openAccountDialog = () => { 
   const saved = account();
   if(saved) $('#accountEmail').value = saved.email;
@@ -265,18 +443,37 @@ $('#openApp').onclick = openAccountDialog;
 $('#startWriting').onclick = openAccountDialog;
 $('#signIn').onclick = openAccountDialog;
 $('#account').onclick = openAccountDialog;
-
 $('#cancelAccount').onclick = () => $('#accountDialog').close();
+
 $('#saveAccount').onclick = () => {
   const emailInput = $('#accountEmail');
+  const emailValue = emailInput.value.trim().toLowerCase();
   
-  if (!emailInput.value.trim()) { 
-    alert("Please enter a username or email to continue."); 
-    return; 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const tooManyConsonants = /[bcdfghjklmnpqrstvwxyz]{6,}/i; 
+  const repeatingLetters = /([a-z])\1{3,}/i;
+
+  if (!emailRegex.test(emailValue)) {
+    alert("Please enter a valid email address (e.g. name@gmail.com).");
+    return;
   }
   
-  // Successful Login
-  localStorage.setItem(ACCOUNT, JSON.stringify({ email: emailInput.value.trim() }));
+  const usernamePart = emailValue.split('@')[0];
+  if (tooManyConsonants.test(usernamePart) || repeatingLetters.test(usernamePart)) {
+    alert("This email looks like a random keyboard smash. Please use a real email address.");
+    return;
+  }
+  
+  localStorage.setItem(ACCOUNT, JSON.stringify({ email: emailValue }));
+  
+  let loadedState = JSON.parse(localStorage.getItem(KEY+'-'+emailValue));
+  if (loadedState) {
+    state = loadedState;
+  } else {
+    state = {notes:[initial()],activeId:null};
+    state.activeId = state.notes[0].id;
+  }
+  
   isAdmin = false;
   $('#accountDialog').close();
   showApp();
@@ -299,7 +496,7 @@ $('#saveAdmin').onclick = () => {
   if (pwdInput.value !== 'layzpanda5050') {
     bans.adminFailed++;
     if (bans.adminFailed >= 5) {
-      bans.adminBan = Date.now() + 10 * 60 * 1000; // 10 mins
+      bans.adminBan = Date.now() + 10 * 60 * 1000;
       bans.adminFailed = 0;
       saveBans();
       alert('5 consecutive failed attempts. Admin tab locked for 10 minutes.');
@@ -310,7 +507,6 @@ $('#saveAdmin').onclick = () => {
     return;
   }
   
-  // Successful Admin Login
   bans.adminFailed = 0;
   saveBans();
   isAdmin = true;
@@ -397,19 +593,24 @@ openaiKey.oninput = () => sessionStorage.setItem(OPENAI_KEY, openaiKey.value.tri
 
 window.apiEndpoint = action => {
   const entered = tunnel.value.trim();
-  if (!entered) return action === 'rewrite' ? '/api/concise' : '/api/transcribe';
+  if (!entered) {
+    if (action === 'chat') return '/api/chat';
+    return action === 'rewrite' ? '/api/concise' : '/api/transcribe';
+  }
   const url = new URL(entered);
-  if (action === 'transcribe') url.pathname = url.pathname.replace(/\/rewrite\/?$/, '/transcribe');
+  if (action === 'transcribe') url.pathname = url.pathname.replace(/\/[^/]+$/, '/transcribe');
+  else if (action === 'chat') url.pathname = url.pathname.replace(/\/[^/]+$/, '/chat');
+  else if (action === 'rewrite') url.pathname = url.pathname.replace(/\/[^/]+$/, '/rewrite');
   return url.toString();
 };
 
 const endpointProblem = (action, error) => {
   const detail = error.message || '';
-  if (action === 'rewrite' && sessionStorage.getItem(OPENAI_KEY)) return ['OpenAI request failed', 'The browser could not complete the request with the entered API key.', 'Check that the key is active and has API billing. If the browser blocks the request, use your ngrok rewrite endpoint instead.'];
-  if (!tunnel.value.trim()) return [`Add a ${action} endpoint`, 'No API tunnel URL is configured.', 'Paste your ngrok rewrite URL into API tunnel below Edit history.'];
-  if (detail.startsWith('HTTP 401') || detail.startsWith('HTTP 403')) return ['Tunnel rejected the request', 'The API returned ' + detail + '.', 'Check your ngrok access policy and that the tunnel is public.'];
-  if (detail.startsWith('HTTP 404')) return [`${action} endpoint not found`, 'The API returned HTTP 404.', action === 'rewrite' ? 'Confirm the URL ends in /rewrite.' : 'Confirm the rewrite URL maps to a /transcribe route.'];
-  return [`Could not ${action}`, 'The tunnel could not be reached or returned an invalid response.', 'Check that ngrok is running, the URL is current, and the API allows this browser origin.'];
+  if (sessionStorage.getItem(OPENAI_KEY)) return ['OpenAI request failed', 'The browser could not complete the request with the entered API key.', 'Check that the key is active.'];
+  if (!tunnel.value.trim()) return [`Add an API endpoint`, 'No API tunnel URL is configured.', 'Paste your ngrok URL into API tunnel.'];
+  if (detail.startsWith('HTTP 401') || detail.startsWith('HTTP 403')) return ['Tunnel rejected the request', 'The API returned ' + detail + '.', 'Check your ngrok access policy.'];
+  if (detail.startsWith('HTTP 404')) return [`Endpoint not found`, 'The API returned HTTP 404.', 'Make sure your API server handles ' + action + ' correctly.'];
+  return [`Could not complete request`, 'The tunnel could not be reached.', 'Check that ngrok is running and accepts requests.'];
 };
 
 // Make Concise Logic
@@ -418,15 +619,13 @@ $('#concise').onclick = async () => {
     showFeedback('Rate limit reached', 'You have reached your limit of 10 prompts per hour.', 'Please try again later or log in as an Administrator.');
     return;
   }
-
   const editor = $('#editor');
   const text = editor.innerText.trim();
   if (!text) { showFeedback('Nothing to rewrite', 'Your active note is empty.', 'Write or paste text into the note, then try Make concise again.'); return; }
   
   const button = $('#concise');
   const status = $('#status');
-  button.disabled = true; 
-  button.textContent = 'Working…';
+  button.disabled = true; button.textContent = 'Working…';
   
   try {
     const apiKey = sessionStorage.getItem(OPENAI_KEY);
@@ -444,17 +643,14 @@ $('#concise').onclick = async () => {
     
     editor.textContent = revised; 
     edit();
-    status.textContent = 'Concise version ready.'; 
-    status.className = 'status good';
-    recordPrompt(); // Success, so record usage
+    status.textContent = 'Concise version ready.'; status.className = 'status good';
+    recordPrompt(); 
   } catch (error) {
     const problem = endpointProblem('rewrite', error);
-    status.textContent = problem[0]; 
-    status.className = 'status error';
+    status.textContent = problem[0]; status.className = 'status error';
     showFeedback(...problem);
   } finally { 
-    button.disabled = false; 
-    button.textContent = 'Make concise'; 
+    button.disabled = false; button.textContent = 'Make concise'; 
   }
 };
 
@@ -463,44 +659,41 @@ let audioRecorder, recordedChunks = [];
 const recordButton = $('#transcribe');
 recordButton.onclick = async () => {
   const status = $('#status');
-  
-  if (audioRecorder?.state === 'recording') { 
-    audioRecorder.stop(); 
-    return; 
-  }
+  if (audioRecorder?.state === 'recording') { audioRecorder.stop(); return; }
   
   if (!canUsePrompt()) {
     showFeedback('Rate limit reached', 'You have reached your limit of 10 prompts per hour.', 'Please try again later or log in as an Administrator.');
     return;
   }
-  
-  if (!tunnel.value.trim()) { 
-    const problem = endpointProblem('transcription', new Error()); 
-    status.textContent = problem[0]; 
-    status.className = 'status error'; 
-    showFeedback(...problem); 
+  if (!tunnel.value.trim() && !sessionStorage.getItem(OPENAI_KEY)) { 
+    showFeedback('Setup required', 'Add an API Tunnel or OpenAI key below timeline to transcribe.', ''); 
     return; 
   }
   
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    recordedChunks = []; 
-    audioRecorder = new MediaRecorder(stream);
+    recordedChunks = []; audioRecorder = new MediaRecorder(stream);
     audioRecorder.ondataavailable = event => { if (event.data.size) recordedChunks.push(event.data); };
     
     audioRecorder.onstop = async () => {
       stream.getTracks().forEach(track => track.stop()); 
-      recordButton.innerHTML = '&#127908;'; // microphone symbol
-      recordButton.disabled = true;
-      status.textContent = 'Transcribing…'; 
-      status.className = 'status';
+      recordButton.innerHTML = '&#127908;'; recordButton.disabled = true;
+      status.textContent = 'Transcribing…'; status.className = 'status';
       
       try {
         const formData = new FormData();
         formData.append('file', new Blob(recordedChunks, { type: audioRecorder.mimeType || 'audio/wav' }), 'audio.wav');
-        const response = await fetch(apiEndpoint('transcribe'), { method: 'POST', body: formData });
-        if (!response.ok) throw new Error('HTTP ' + response.status);
         
+        const apiKey = sessionStorage.getItem(OPENAI_KEY);
+        if(apiKey) formData.append('model', 'whisper-1');
+
+        const response = await fetch(apiKey ? 'https://api.openai.com/v1/audio/transcriptions' : apiEndpoint('transcribe'), {
+          method: 'POST',
+          headers: apiKey ? { 'Authorization': 'Bearer ' + apiKey } : {},
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         const data = await response.json(); 
         const transcript = data.text || data.transcript || data.result;
         if (!transcript) throw new Error('The transcription response did not contain text.');
@@ -508,38 +701,96 @@ recordButton.onclick = async () => {
         const editor = $('#editor'); 
         editor.innerText += (editor.innerText ? '\n\n' : '') + transcript; 
         edit();
-        status.textContent = 'Transcript added to your note.'; 
-        status.className = 'status good';
-        recordPrompt(); // Success, so record usage
+        status.textContent = 'Transcript added to your note.'; status.className = 'status good';
+        recordPrompt(); 
       } catch (error) { 
         const problem = endpointProblem('transcription', error); 
-        status.textContent = problem[0]; 
-        status.className = 'status error'; 
+        status.textContent = problem[0]; status.className = 'status error'; 
         showFeedback(...problem); 
-      } finally { 
-        recordButton.disabled = false; 
-      }
+      } finally { recordButton.disabled = false; }
     };
     
     audioRecorder.start(); 
-    recordButton.innerHTML = '&#9632;'; // stop square symbol
-    status.textContent = 'Recording… click the stop button to transcribe.'; 
-    status.className = 'status';
+    recordButton.innerHTML = '&#9632;'; 
+    status.textContent = 'Recording… click the stop button to transcribe.'; status.className = 'status';
   } catch (error) {
-    const message = error.name === 'NotAllowedError' ? 'Microphone access was denied.' : 'A microphone could not be started.';
-    status.textContent = message; 
-    status.className = 'status error';
-    showFeedback('Microphone unavailable', message, 'Allow microphone access in your browser settings, then try again.');
+    showFeedback('Microphone unavailable', 'Allow microphone access in your browser settings.', '');
+  }
+};
+
+// Chatbot Logic
+let chatMessages = [{ role: 'system', content: 'You are SquigglyBot, a helpful assistant built into a note-taking app.' }];
+
+$('#openChatBtn').onclick = () => $('#chatDialog').showModal();
+$('#closeChatBtn').onclick = () => $('#chatDialog').close();
+
+window.sendChatMessage = async () => {
+  const input = $('#chatInput');
+  const userText = input.value.trim();
+  if (!userText) return;
+
+  if (!canUsePrompt()) {
+    showFeedback('Rate limit reached', 'You have reached your limit of 10 prompts per hour.', 'Please try again later or log in as an Administrator.');
+    $('#chatDialog').close();
+    return;
+  }
+
+  const history = $('#chatHistory');
+  const userDiv = document.createElement('div');
+  userDiv.className = 'msg user';
+  userDiv.textContent = userText;
+  history.appendChild(userDiv);
+  history.scrollTop = history.scrollHeight;
+  input.value = '';
+  
+  chatMessages.push({ role: 'user', content: userText });
+
+  const btn = $('#chatSendBtn');
+  btn.disabled = true; btn.textContent = '...';
+
+  try {
+    const apiKey = sessionStorage.getItem(OPENAI_KEY);
+    const useOpenAI = !!apiKey;
+    
+    const payload = useOpenAI ? { model: 'gpt-4o-mini', messages: chatMessages } : { messages: chatMessages };
+
+    const response = await fetch(useOpenAI ? 'https://api.openai.com/v1/chat/completions' : apiEndpoint('chat'), useOpenAI ? {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify(payload)
+    } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const data = await response.json();
+    
+    const botReply = data.choices?.[0]?.message?.content || data.reply || data.text || data.message || "I couldn't generate a response.";
+    
+    chatMessages.push({ role: 'assistant', content: botReply });
+
+    const botDiv = document.createElement('div');
+    botDiv.className = 'msg bot';
+    botDiv.textContent = botReply;
+    history.appendChild(botDiv);
+    history.scrollTop = history.scrollHeight;
+    
+    recordPrompt(); 
+
+  } catch (error) {
+    const botDiv = document.createElement('div');
+    botDiv.className = 'msg bot';
+    botDiv.style.opacity = '0.7';
+    botDiv.textContent = "Error: " + endpointProblem('chat', error)[1];
+    history.appendChild(botDiv);
+    history.scrollTop = history.scrollHeight;
+    chatMessages.pop();
+  } finally {
+    btn.disabled = false; btn.textContent = 'Send';
   }
 };
 
 // Rendering and Notes Selection
 (() => {
   const selectedNotes = new Set();
-  const getSelected = () => {
-    const chosen = state.notes.filter(note => selectedNotes.has(note.id));
-    return chosen.length ? chosen : [active()];
-  };
   const updateSelectionLabels = () => {
     const count = selectedNotes.size;
     $('#exportNote').textContent = count ? 'Export (' + count + ')' : 'Export';
@@ -556,7 +807,6 @@ recordButton.onclick = async () => {
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.checked = selectedNotes.has(item.id);
-      checkbox.setAttribute('aria-label', 'Select ' + (item.title || 'Untitled note'));
       checkbox.onchange = () => {
         if (checkbox.checked) selectedNotes.add(item.id); else selectedNotes.delete(item.id);
         updateSelectionLabels();
@@ -582,8 +832,7 @@ recordButton.onclick = async () => {
     renderIdentity();
     updateSelectionLabels();
   };
-  
-  render(); // Initial call
+  render(); 
 })();
 </script>
 </body>

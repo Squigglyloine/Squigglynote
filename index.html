@@ -49,7 +49,7 @@
     <div>
       <div class="brand">Squiggly Note</div>
       <div class="eyebrow" id="workspaceIdentity">Your workspace</div>
-      <div class="eyebrow" id="usageTimer" style="color:#a33; margin-top:4px;"></div>
+      <div class="eyebrow" id="usageTimer" style="margin-top:4px;"></div>
     </div>
     <div class="actions">
       <button class="btn" id="adminBtn">Admin Access</button>
@@ -125,13 +125,10 @@
 <!-- Main Login Dialog -->
 <dialog class="dialog" id="accountDialog">
   <h2>Sign in</h2>
-  <p>Sign in with your email and password to access the workspace.</p>
+  <p>Create or sign into a workspace.</p>
   
-  <label for="accountEmail" class="eyebrow" style="margin-top:12px;display:block;">Email address</label>
-  <input id="accountEmail" type="email" autocomplete="email" placeholder="you@example.com" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--ink);padding:10px;outline:0">
-  
-  <label for="accountPassword" class="eyebrow" style="margin-top:12px;display:block;">Password</label>
-  <input id="accountPassword" type="password" placeholder="•••••••••••••" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--ink);padding:10px;outline:0">
+  <label for="accountEmail" class="eyebrow" style="margin-top:12px;display:block;">Username or Email</label>
+  <input id="accountEmail" type="text" autocomplete="username" placeholder="your_username" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--ink);padding:10px;outline:0">
   
   <div class="dialog-actions"><button class="btn" id="cancelAccount">Cancel</button><button class="btn primary" id="saveAccount">Continue</button></div>
 </dialog>
@@ -139,7 +136,7 @@
 <!-- Admin Login Dialog -->
 <dialog class="dialog" id="adminDialog">
   <h2>Administrator Login</h2>
-  <p>Enter the admin password for unlimited usage.</p>
+  <p>Enter the admin password for unlimited prompts.</p>
   <label for="adminPassword" class="eyebrow" style="margin-top:12px;display:block;">Admin Password</label>
   <input id="adminPassword" type="password" placeholder="•••••••••••••" style="width:100%;margin-top:8px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--ink);padding:10px;outline:0">
   
@@ -156,6 +153,8 @@
 
 <script>
 const KEY='squiggly-workspace-v4', PREF='squiggly-preferences-v2', ACCOUNT='squiggly-account-v1', BAN_KEY='squiggly-bans-v1';
+const PROMPTS_KEY = 'squiggly-prompts-usage';
+const PROMPT_LIMIT = 10;
 const $ = s => document.querySelector(s);
 const blank = () => ({id:crypto.randomUUID(),title:'Untitled note',body:'',created:Date.now(),edited:Date.now(),events:[]});
 const initial = () => blank();
@@ -167,10 +166,9 @@ let pending = null;
 const active = () => state.notes.find(n=>n.id===state.activeId) || state.notes[0];
 
 // Ban and Session State
-let bans = JSON.parse(localStorage.getItem(BAN_KEY) || '{"userFailed":0,"userBan":0,"adminFailed":0,"adminBan":0}');
-let sessionEnd = 0;
+let bans = JSON.parse(localStorage.getItem(BAN_KEY) || '{"adminFailed":0,"adminBan":0}');
 let isAdmin = false;
-let sessionTimer = null;
+let displayTimer = null;
 
 function save(message='Saved'){localStorage.setItem(KEY+'-'+OWNER,JSON.stringify(state));$('#saveState').textContent=message}
 function saveBans() { localStorage.setItem(BAN_KEY, JSON.stringify(bans)); }
@@ -192,37 +190,50 @@ function renderIdentity(){
 function showLanding(){
   app.classList.remove('visible');
   landing.hidden = false;
-  clearInterval(sessionTimer);
+  clearInterval(displayTimer);
   isAdmin = false;
-  $('#accountPassword').value = '';
 }
 
-function startSession() {
-  clearInterval(sessionTimer);
-  sessionTimer = setInterval(() => {
-    if (isAdmin) {
-      $('#usageTimer').textContent = 'Admin Mode - Unlimited Time';
-      $('#usageTimer').style.color = 'var(--ink)';
-      return;
-    }
-    const left = sessionEnd - Date.now();
-    if (left <= 0) {
-      clearInterval(sessionTimer);
-      alert('Your 15 minutes of usage time has expired.');
-      showLanding();
-    } else {
-      const m = Math.floor(left / 60000);
-      const s = Math.floor((left % 60000) / 1000);
-      $('#usageTimer').textContent = `${m}:${s < 10 ? '0' : ''}${s} remaining`;
-      $('#usageTimer').style.color = '#a33';
-    }
-  }, 1000);
+// Prompt Limits Logic
+function getPromptCount() {
+  let history = JSON.parse(localStorage.getItem(PROMPTS_KEY) || '[]');
+  // Filter out prompts older than 1 hour (3,600,000 ms)
+  history = history.filter(t => (Date.now() - t) < 3600000);
+  localStorage.setItem(PROMPTS_KEY, JSON.stringify(history));
+  return history.length;
+}
+
+function recordPrompt() {
+  if (isAdmin) return; // Admins don't get logged towards the limit
+  let history = JSON.parse(localStorage.getItem(PROMPTS_KEY) || '[]');
+  history.push(Date.now());
+  localStorage.setItem(PROMPTS_KEY, JSON.stringify(history));
+  updateUsageDisplay();
+}
+
+function canUsePrompt() {
+  if (isAdmin) return true;
+  return getPromptCount() < PROMPT_LIMIT;
+}
+
+function updateUsageDisplay() {
+  const display = $('#usageTimer');
+  if (isAdmin) {
+    display.textContent = 'Admin Mode - Unlimited Prompts';
+    display.style.color = 'var(--ink)';
+  } else {
+    const used = getPromptCount();
+    display.textContent = `${used}/${PROMPT_LIMIT} prompts used this hour`;
+    display.style.color = used >= PROMPT_LIMIT ? '#a33' : 'var(--muted)';
+  }
 }
 
 function showApp(){
   landing.hidden = true;
   app.classList.add('visible');
-  startSession();
+  updateUsageDisplay();
+  // Keep the display accurate as old prompts expire
+  displayTimer = setInterval(updateUsageDisplay, 60000);
   render();
 }
 
@@ -244,8 +255,12 @@ function openConfirm(title,copy,fn){
   $('#confirmDialog').showModal();
 }
 
-// User Authentication Flow (Forced Login)
-const openAccountDialog = () => { $('#accountDialog').showModal(); };
+// User Authentication Flow 
+const openAccountDialog = () => { 
+  const saved = account();
+  if(saved) $('#accountEmail').value = saved.email;
+  $('#accountDialog').showModal(); 
+};
 $('#openApp').onclick = openAccountDialog;
 $('#startWriting').onclick = openAccountDialog;
 $('#signIn').onclick = openAccountDialog;
@@ -254,35 +269,14 @@ $('#account').onclick = openAccountDialog;
 $('#cancelAccount').onclick = () => $('#accountDialog').close();
 $('#saveAccount').onclick = () => {
   const emailInput = $('#accountEmail');
-  const pwdInput = $('#accountPassword');
   
-  if (Date.now() < bans.userBan) {
-    const left = Math.ceil((bans.userBan - Date.now()) / 60000);
-    alert(`Too many failed attempts. You are banned for ${left} more minute(s).`);
-    return;
-  }
-  if (!emailInput.checkValidity() || !emailInput.value.trim()) { emailInput.reportValidity(); return; }
-  
-  if (pwdInput.value !== 'Jacobiastreet') {
-    bans.userFailed++;
-    if (bans.userFailed >= 5) {
-      bans.userBan = Date.now() + 30 * 60 * 1000; // 30 mins
-      bans.userFailed = 0;
-      saveBans();
-      alert('5 consecutive failed attempts. You are banned for 30 minutes.');
-    } else {
-      saveBans();
-      alert(`Incorrect password. Attempts left: ${5 - bans.userFailed}`);
-    }
-    return;
+  if (!emailInput.value.trim()) { 
+    alert("Please enter a username or email to continue."); 
+    return; 
   }
   
   // Successful Login
-  bans.userFailed = 0;
-  saveBans();
   localStorage.setItem(ACCOUNT, JSON.stringify({ email: emailInput.value.trim() }));
-  
-  sessionEnd = Date.now() + 15 * 60 * 1000; // 15 mins
   isAdmin = false;
   $('#accountDialog').close();
   showApp();
@@ -321,7 +315,8 @@ $('#saveAdmin').onclick = () => {
   saveBans();
   isAdmin = true;
   $('#adminDialog').close();
-  alert('Admin access granted! Usage time is now unlimited.');
+  updateUsageDisplay();
+  alert('Admin access granted! Prompts are now unlimited.');
 };
 
 $('#back').onclick = showLanding;
@@ -378,10 +373,167 @@ document.querySelectorAll('[data-key]').forEach(b=>b.onclick=()=>{
   openSettings();
 });
 $('#closeSettings').onclick = () => $('#settingsDialog').close();
+$('#closeFeedback').onclick = () => $('#feedbackDialog').close();
+
+window.showFeedback = (title, message, suggestion) => {
+  $('#feedbackTitle').textContent = title;
+  $('#feedbackMessage').textContent = message;
+  $('#feedbackSuggestion').textContent = suggestion;
+  if (!$('#feedbackDialog').open) $('#feedbackDialog').showModal();
+};
 
 applyPrefs();
 
-// Fixed and combined the selection and render scripts below
+// AI Endpoint Tunnel Logic
+const tunnel = $('#apiTunnel');
+const TUNNEL_KEY = 'squiggly-api-tunnel-v1';
+tunnel.value = localStorage.getItem(TUNNEL_KEY) || '';
+tunnel.oninput = () => localStorage.setItem(TUNNEL_KEY, tunnel.value.trim());
+
+const openaiKey = $('#openaiKey');
+const OPENAI_KEY = 'squiggly-openai-key-session';
+openaiKey.value = sessionStorage.getItem(OPENAI_KEY) || '';
+openaiKey.oninput = () => sessionStorage.setItem(OPENAI_KEY, openaiKey.value.trim());
+
+window.apiEndpoint = action => {
+  const entered = tunnel.value.trim();
+  if (!entered) return action === 'rewrite' ? '/api/concise' : '/api/transcribe';
+  const url = new URL(entered);
+  if (action === 'transcribe') url.pathname = url.pathname.replace(/\/rewrite\/?$/, '/transcribe');
+  return url.toString();
+};
+
+const endpointProblem = (action, error) => {
+  const detail = error.message || '';
+  if (action === 'rewrite' && sessionStorage.getItem(OPENAI_KEY)) return ['OpenAI request failed', 'The browser could not complete the request with the entered API key.', 'Check that the key is active and has API billing. If the browser blocks the request, use your ngrok rewrite endpoint instead.'];
+  if (!tunnel.value.trim()) return [`Add a ${action} endpoint`, 'No API tunnel URL is configured.', 'Paste your ngrok rewrite URL into API tunnel below Edit history.'];
+  if (detail.startsWith('HTTP 401') || detail.startsWith('HTTP 403')) return ['Tunnel rejected the request', 'The API returned ' + detail + '.', 'Check your ngrok access policy and that the tunnel is public.'];
+  if (detail.startsWith('HTTP 404')) return [`${action} endpoint not found`, 'The API returned HTTP 404.', action === 'rewrite' ? 'Confirm the URL ends in /rewrite.' : 'Confirm the rewrite URL maps to a /transcribe route.'];
+  return [`Could not ${action}`, 'The tunnel could not be reached or returned an invalid response.', 'Check that ngrok is running, the URL is current, and the API allows this browser origin.'];
+};
+
+// Make Concise Logic
+$('#concise').onclick = async () => {
+  if (!canUsePrompt()) {
+    showFeedback('Rate limit reached', 'You have reached your limit of 10 prompts per hour.', 'Please try again later or log in as an Administrator.');
+    return;
+  }
+
+  const editor = $('#editor');
+  const text = editor.innerText.trim();
+  if (!text) { showFeedback('Nothing to rewrite', 'Your active note is empty.', 'Write or paste text into the note, then try Make concise again.'); return; }
+  
+  const button = $('#concise');
+  const status = $('#status');
+  button.disabled = true; 
+  button.textContent = 'Working…';
+  
+  try {
+    const apiKey = sessionStorage.getItem(OPENAI_KEY);
+    const useOpenAI = !!apiKey;
+    const response = await fetch(useOpenAI ? 'https://api.openai.com/v1/chat/completions' : apiEndpoint('rewrite'), useOpenAI ? {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'system', content: 'Rewrite the user text to be concise while preserving its meaning. Return only the revised text.' }, { role: 'user', content: text }] })
+    } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
+    
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const data = await response.json();
+    const revised = data.text || data.concise || data.result || data.choices?.[0]?.message?.content;
+    if (!revised) throw new Error('The rewrite response did not contain text.');
+    
+    editor.textContent = revised; 
+    edit();
+    status.textContent = 'Concise version ready.'; 
+    status.className = 'status good';
+    recordPrompt(); // Success, so record usage
+  } catch (error) {
+    const problem = endpointProblem('rewrite', error);
+    status.textContent = problem[0]; 
+    status.className = 'status error';
+    showFeedback(...problem);
+  } finally { 
+    button.disabled = false; 
+    button.textContent = 'Make concise'; 
+  }
+};
+
+// Audio Transcription Logic
+let audioRecorder, recordedChunks = [];
+const recordButton = $('#transcribe');
+recordButton.onclick = async () => {
+  const status = $('#status');
+  
+  if (audioRecorder?.state === 'recording') { 
+    audioRecorder.stop(); 
+    return; 
+  }
+  
+  if (!canUsePrompt()) {
+    showFeedback('Rate limit reached', 'You have reached your limit of 10 prompts per hour.', 'Please try again later or log in as an Administrator.');
+    return;
+  }
+  
+  if (!tunnel.value.trim()) { 
+    const problem = endpointProblem('transcription', new Error()); 
+    status.textContent = problem[0]; 
+    status.className = 'status error'; 
+    showFeedback(...problem); 
+    return; 
+  }
+  
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    recordedChunks = []; 
+    audioRecorder = new MediaRecorder(stream);
+    audioRecorder.ondataavailable = event => { if (event.data.size) recordedChunks.push(event.data); };
+    
+    audioRecorder.onstop = async () => {
+      stream.getTracks().forEach(track => track.stop()); 
+      recordButton.innerHTML = '&#127908;'; // microphone symbol
+      recordButton.disabled = true;
+      status.textContent = 'Transcribing…'; 
+      status.className = 'status';
+      
+      try {
+        const formData = new FormData();
+        formData.append('file', new Blob(recordedChunks, { type: audioRecorder.mimeType || 'audio/wav' }), 'audio.wav');
+        const response = await fetch(apiEndpoint('transcribe'), { method: 'POST', body: formData });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        
+        const data = await response.json(); 
+        const transcript = data.text || data.transcript || data.result;
+        if (!transcript) throw new Error('The transcription response did not contain text.');
+        
+        const editor = $('#editor'); 
+        editor.innerText += (editor.innerText ? '\n\n' : '') + transcript; 
+        edit();
+        status.textContent = 'Transcript added to your note.'; 
+        status.className = 'status good';
+        recordPrompt(); // Success, so record usage
+      } catch (error) { 
+        const problem = endpointProblem('transcription', error); 
+        status.textContent = problem[0]; 
+        status.className = 'status error'; 
+        showFeedback(...problem); 
+      } finally { 
+        recordButton.disabled = false; 
+      }
+    };
+    
+    audioRecorder.start(); 
+    recordButton.innerHTML = '&#9632;'; // stop square symbol
+    status.textContent = 'Recording… click the stop button to transcribe.'; 
+    status.className = 'status';
+  } catch (error) {
+    const message = error.name === 'NotAllowedError' ? 'Microphone access was denied.' : 'A microphone could not be started.';
+    status.textContent = message; 
+    status.className = 'status error';
+    showFeedback('Microphone unavailable', message, 'Allow microphone access in your browser settings, then try again.');
+  }
+};
+
+// Rendering and Notes Selection
 (() => {
   const selectedNotes = new Set();
   const getSelected = () => {
@@ -390,13 +542,13 @@ applyPrefs();
   };
   const updateSelectionLabels = () => {
     const count = selectedNotes.size;
-    document.querySelector('#exportNote').textContent = count ? 'Export (' + count + ')' : 'Export';
-    document.querySelector('#deleteNote').textContent = count ? 'Delete (' + count + ')' : 'Delete';
+    $('#exportNote').textContent = count ? 'Export (' + count + ')' : 'Export';
+    $('#deleteNote').textContent = count ? 'Delete (' + count + ')' : 'Delete';
   };
   
   window.render = () => {
     const note = active();
-    const tabs = document.querySelector('#tabs');
+    const tabs = $('#tabs');
     tabs.replaceChildren(...state.notes.map(item => {
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;align-items:center;gap:5px';
@@ -412,7 +564,7 @@ applyPrefs();
       
       const button = document.createElement('button');
       button.className = 'tab' + (item.id === note.id ? ' active' : '');
-      button.style.flex = '1'; // Fixed incomplete line from your snippet!
+      button.style.flex = '1';
       button.textContent = item.title || 'Untitled note';
       button.onclick = () => { state.activeId = item.id; save(); render(); };
       

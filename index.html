@@ -12,7 +12,7 @@
   --r: 16px;
   
   /* Liquid Glass (Light Theme) */
-  --page-bg: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* Fallback clean background */
+  --page-bg: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
   --glass-bg: rgba(255, 255, 255, 0.45);
   --glass-sheen: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 100%);
   --glass-border: rgba(255, 255, 255, 0.6);
@@ -43,7 +43,7 @@ body.dark {
   
   --primary: rgba(255, 255, 255, 0.9);
   --primary-text: #111;
-  --page-bg: linear-gradient(135deg, #1f1c2c 0%, #928dab 100%); /* Warm dark */
+  --page-bg: linear-gradient(135deg, #1f1c2c 0%, #928dab 100%);
 }
 /* Clean Dark Background */
 body.dark.clean { --page-bg: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); }
@@ -62,7 +62,7 @@ button { cursor: pointer; transition: all 0.2s ease; }
 .shell { width: min(1160px, calc(100% - 32px)); margin: auto; }
 .landing { min-height: 100vh; padding-bottom: 60px; }
 
-/* The Glass Mixin Class (applied to UI components) */
+/* The Glass Mixin Class */
 .glass-panel {
   background: var(--glass-bg);
   background-image: var(--glass-sheen);
@@ -107,8 +107,9 @@ button { cursor: pointer; transition: all 0.2s ease; }
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .feature { padding: 24px; }
 
-.app { display: none; width: min(1220px, calc(100% - 28px)); margin: auto; padding-bottom: 34px; }
-.app.visible { display: block; }
+/* Main App Workspaces */
+.app, .chat-view { display: none; width: min(1220px, calc(100% - 28px)); margin: auto; padding-bottom: 34px; }
+.app.visible, .chat-view.visible { display: block; }
 .layout { display: grid; grid-template-columns: 255px 1fr 220px; gap: 16px; align-items: start; }
 .sidebar, .timeline { padding: 18px; }
 .sidebar-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
@@ -137,7 +138,7 @@ button { cursor: pointer; transition: all 0.2s ease; }
 .status.error { color: #d75a5a; font-weight: 600; }
 .status.good { color: #439659; font-weight: 600; }
 
-/* Liquid Glass Dialogs */
+/* Dialogs */
 .dialog { width: min(420px, calc(100% - 28px)); color: var(--ink); padding: 28px; outline: none; }
 .dialog::backdrop { background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .dialog h2 { margin: 0 0 8px; letter-spacing: -.03em; }
@@ -149,21 +150,22 @@ button { cursor: pointer; transition: all 0.2s ease; }
 .choices button.active { background: var(--primary); border-color: var(--primary); color: var(--primary-text); }
 .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
 
-/* Form Inputs inside Glass */
 input[type="email"], input[type="password"], input[type="url"], input[type="text"] {
   width: 100%; margin-top: 8px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--glass-bg); color: var(--ink); padding: 12px; outline: 0; font-size: .9rem; transition: border 0.2s, background 0.2s;
 }
 input:focus { border-color: var(--muted); background: var(--glass-hover); }
 
-/* Chat Dialog Specific Styles */
-.chat-dialog { width: min(480px, calc(100% - 28px)); padding: 22px; display: flex; flex-direction: column; max-height: 85vh; }
-.chat-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--glass-border-soft); padding-bottom: 14px; margin-bottom: 14px; }
-.chat-header h2 { margin: 0; font-size: 1.15rem; }
-.chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; min-height: 350px; padding: 14px; background: rgba(0,0,0,0.02); border: 1px inset var(--glass-border-soft); border-radius: 12px; margin-bottom: 16px; }
-.msg { padding: 10px 14px; border-radius: 14px; font-size: .9rem; line-height: 1.5; max-width: 85%; word-wrap: break-word; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+/* Huge Full-Screen Chat View */
+.chat-container { display: flex; flex-direction: column; min-height: 80vh; }
+.chat-header { display: flex; justify-content: space-between; align-items: center; padding: 24px; border-bottom: 1px solid var(--glass-border-soft); }
+.chat-header h1 { margin: 0; font-size: 2rem; letter-spacing: -.04em; }
+.chat-history { flex: 1; padding: 32px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; max-height: 60vh; scroll-behavior: smooth; }
+.msg { padding: 16px 24px; border-radius: 20px; font-size: 1.1rem; line-height: 1.6; max-width: 80%; word-wrap: break-word; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 .msg.user { background: var(--primary); color: var(--primary-text); align-self: flex-end; border-bottom-right-radius: 4px; }
-.msg.bot { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--ink); align-self: flex-start; border-bottom-left-radius: 4px; backdrop-filter: blur(4px); }
-.chat-input-area { display: flex; gap: 10px; }
+.msg.bot { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--ink); align-self: flex-start; border-bottom-left-radius: 4px; backdrop-filter: blur(8px); }
+.chat-input-area { display: flex; gap: 16px; padding: 24px; border-top: 1px solid var(--glass-border-soft); background: rgba(0,0,0,0.02); }
+.chat-input-area input { margin-top: 0; font-size: 1.1rem; padding: 16px 20px; border-radius: 12px; }
+.chat-input-area .btn { font-size: 1.1rem; padding: 0 32px; border-radius: 12px; }
 
 body.sans .editor { font-family: Inter, system-ui, sans-serif; line-height: 1.7; }
 body.large .editor { font-size: 1.25rem; }
@@ -174,6 +176,7 @@ body.large .editor { font-size: 1.25rem; }
   .topbar{flex-direction:column; align-items:flex-start; padding:16px}
   .actions{margin-top:12px; width:100%; justify-content:flex-start;}
   .editor-wrap{padding:20px} .hero h1{font-size:3.7rem}
+  .chat-history { padding: 16px; } .msg { font-size: 1rem; max-width: 90%; }
 }
 </style>
 </head>
@@ -213,6 +216,7 @@ body.large .editor { font-size: 1.25rem; }
   </div>
 </section>
 
+<!-- MAIN WORKSPACE -->
 <main class="app" id="app">
   <header class="topbar glass-panel">
     <div>
@@ -276,21 +280,29 @@ body.large .editor { font-size: 1.25rem; }
   </section>
 </main>
 
-<!-- Chatbot Dialog -->
-<dialog class="dialog glass-panel chat-dialog" id="chatDialog">
-  <div class="chat-header">
-    <h2>SquigglyBot</h2>
-    <button class="btn" id="closeChatBtn">Close</button>
-  </div>
-  <div class="chat-history" id="chatHistory">
-    <div class="msg bot">Hello! I'm SquigglyBot. Ask me questions, tell me to draft ideas, or just chat!</div>
-  </div>
-  <form id="chatForm" class="chat-input-area" onsubmit="event.preventDefault(); sendChatMessage();">
-    <input type="text" class="chat-input" id="chatInput" placeholder="Message SquigglyBot..." autocomplete="off" style="margin-top: 0;">
-    <button type="submit" class="btn primary" id="chatSendBtn">Send</button>
-  </form>
-</dialog>
+<!-- HUGE CHAT WORKSPACE -->
+<main class="chat-view" id="chatView">
+  <header class="topbar glass-panel" style="margin-bottom: 16px;">
+    <div>
+      <div class="brand">SquigglyBot</div>
+      <div class="eyebrow">Your Personal AI Assistant</div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="closeChatBtn">Back to Notes</button>
+    </div>
+  </header>
+  <section class="glass-panel chat-container">
+    <div class="chat-history" id="chatHistory">
+      <div class="msg bot">Hello! I'm SquigglyBot. Ask me questions, tell me to draft ideas, or just chat!</div>
+    </div>
+    <form id="chatForm" class="chat-input-area" onsubmit="event.preventDefault(); sendChatMessage();">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Message SquigglyBot..." autocomplete="off">
+      <button type="submit" class="btn primary" id="chatSendBtn">Send</button>
+    </form>
+  </section>
+</main>
 
+<!-- Dialogs -->
 <dialog class="dialog glass-panel" id="settingsDialog">
   <h2>Settings</h2>
   <p>We want the most customization possible for you.</p>
@@ -369,12 +381,12 @@ function renderIdentity(){
 
 function showLanding(){
   app.classList.remove('visible');
+  chatView.classList.remove('visible');
   landing.hidden = false;
   clearInterval(displayTimer);
   isAdmin = false;
 }
 
-// Prompt Limits Logic
 function getPromptCount() {
   let history = JSON.parse(localStorage.getItem(PROMPTS_KEY) || '[]');
   history = history.filter(t => (Date.now() - t) < 3600000);
@@ -409,10 +421,17 @@ function updateUsageDisplay() {
 
 function showApp(){
   landing.hidden = true;
+  chatView.classList.remove('visible');
   app.classList.add('visible');
   updateUsageDisplay();
   displayTimer = setInterval(updateUsageDisplay, 60000);
   render();
+}
+
+function showChat() {
+  landing.hidden = true;
+  app.classList.remove('visible');
+  chatView.classList.add('visible');
 }
 
 function edit(){
@@ -448,28 +467,19 @@ $('#cancelAccount').onclick = () => $('#accountDialog').close();
 $('#saveAccount').onclick = () => {
   const emailInput = $('#accountEmail');
   const emailValue = emailInput.value.trim().toLowerCase();
-  
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const tooManyConsonants = /[bcdfghjklmnpqrstvwxyz]{6,}/i; 
   const repeatingLetters = /([a-z])\1{3,}/i;
 
-  if (!emailRegex.test(emailValue)) {
-    alert("Please enter a valid email address (e.g. name@gmail.com).");
-    return;
-  }
-  
+  if (!emailRegex.test(emailValue)) { alert("Please enter a valid email address."); return; }
   const usernamePart = emailValue.split('@')[0];
   if (tooManyConsonants.test(usernamePart) || repeatingLetters.test(usernamePart)) {
-    alert("This email looks like a random keyboard smash. Please use a real email address.");
-    return;
+    alert("This email looks like a random keyboard smash. Please use a real email address."); return;
   }
   
   localStorage.setItem(ACCOUNT, JSON.stringify({ email: emailValue }));
-  
   let loadedState = JSON.parse(localStorage.getItem(KEY+'-'+emailValue));
-  if (loadedState) {
-    state = loadedState;
-  } else {
+  if (loadedState) { state = loadedState; } else {
     state = {notes:[initial()],activeId:null};
     state.activeId = state.notes[0].id;
   }
@@ -480,48 +490,31 @@ $('#saveAccount').onclick = () => {
 };
 
 // Admin Authentication Flow
-$('#adminBtn').onclick = () => {
-  $('#adminPassword').value = '';
-  $('#adminDialog').showModal();
-};
+$('#adminBtn').onclick = () => { $('#adminPassword').value = ''; $('#adminDialog').showModal(); };
 $('#cancelAdmin').onclick = () => $('#adminDialog').close();
 $('#saveAdmin').onclick = () => {
   if (Date.now() < bans.adminBan) {
     const left = Math.ceil((bans.adminBan - Date.now()) / 60000);
-    alert(`Admin tab locked. Try again in ${left} minute(s).`);
-    return;
+    alert(`Admin tab locked. Try again in ${left} minute(s).`); return;
   }
   
-  const pwdInput = $('#adminPassword');
-  if (pwdInput.value !== 'layzpanda5050') {
+  if ($('#adminPassword').value !== 'layzpanda5050') {
     bans.adminFailed++;
     if (bans.adminFailed >= 5) {
-      bans.adminBan = Date.now() + 10 * 60 * 1000;
-      bans.adminFailed = 0;
-      saveBans();
+      bans.adminBan = Date.now() + 10 * 60 * 1000; bans.adminFailed = 0; saveBans();
       alert('5 consecutive failed attempts. Admin tab locked for 10 minutes.');
     } else {
-      saveBans();
-      alert(`Incorrect admin password. Attempts left: ${5 - bans.adminFailed}`);
+      saveBans(); alert(`Incorrect admin password. Attempts left: ${5 - bans.adminFailed}`);
     }
     return;
   }
-  
-  bans.adminFailed = 0;
-  saveBans();
-  isAdmin = true;
-  $('#adminDialog').close();
-  updateUsageDisplay();
-  alert('Admin access granted! Prompts are now unlimited.');
+  bans.adminFailed = 0; saveBans(); isAdmin = true; $('#adminDialog').close();
+  updateUsageDisplay(); alert('Admin access granted! Prompts are now unlimited.');
 };
 
 $('#back').onclick = showLanding;
 $('#newNote').onclick = () => {
-  const n = blank();
-  state.notes.push(n);
-  state.activeId = n.id;
-  save('New note');
-  render();
+  const n = blank(); state.notes.push(n); state.activeId = n.id; save('New note'); render();
 };
 $('#title').oninput = edit;
 $('#editor').oninput = edit;
@@ -530,30 +523,21 @@ $('#deleteNote').onclick = () => {
   openConfirm('Delete note?','Delete "'+(n.title||'Untitled note')+'"? This cannot be undone.',()=>{
     state.notes = state.notes.filter(x=>x.id!==n.id);
     if(!state.notes.length) state.notes.push(blank());
-    state.activeId = state.notes[0].id;
-    save();
-    render();
+    state.activeId = state.notes[0].id; save(); render();
   });
 };
 $('#deleteWorkspace').onclick = () => openConfirm('Delete workspace?','This removes every note. This cannot be undone.',()=>{
-  state={notes:[initial()],activeId:null};
-  state.activeId=state.notes[0].id;
-  save(); render(); showLanding();
+  state={notes:[initial()],activeId:null}; state.activeId=state.notes[0].id; save(); render(); showLanding();
 });
 $('#cancelConfirm').onclick = () => $('#confirmDialog').close();
-$('#confirmAction').onclick = () => {
-  if(pending) pending();
-  pending = null;
-  $('#confirmDialog').close();
-};
+$('#confirmAction').onclick = () => { if(pending) pending(); pending = null; $('#confirmDialog').close(); };
 $('#exportNote').onclick = () => {
   const n = active();
   openConfirm('Export note?','Download "'+(n.title||'Untitled note')+'" as a text file?',()=>{
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([n.title+'\n\n'+n.body],{type:'text/plain'}));
     a.download = (n.title||'note').replace(/[\\/:*?"<>|]/g,'-')+'.txt';
-    a.click();
-    URL.revokeObjectURL(a.href);
+    a.click(); URL.revokeObjectURL(a.href);
   });
 };
 
@@ -564,9 +548,7 @@ function openSettings(){
 $('#homeSettings').onclick = openSettings;
 $('#workspaceSettings').onclick = openSettings;
 document.querySelectorAll('[data-key]').forEach(b=>b.onclick=()=>{
-  prefs[b.dataset.key] = b.dataset.value;
-  applyPrefs();
-  openSettings();
+  prefs[b.dataset.key] = b.dataset.value; applyPrefs(); openSettings();
 });
 $('#closeSettings').onclick = () => $('#settingsDialog').close();
 $('#closeFeedback').onclick = () => $('#feedbackDialog').close();
@@ -580,7 +562,7 @@ window.showFeedback = (title, message, suggestion) => {
 
 applyPrefs();
 
-// AI Endpoint Tunnel Logic
+// API Tunnel Configuration
 const tunnel = $('#apiTunnel');
 const TUNNEL_KEY = 'squiggly-api-tunnel-v1';
 tunnel.value = localStorage.getItem(TUNNEL_KEY) || '';
@@ -606,25 +588,20 @@ window.apiEndpoint = action => {
 
 const endpointProblem = (action, error) => {
   const detail = error.message || '';
-  if (sessionStorage.getItem(OPENAI_KEY)) return ['OpenAI request failed', 'The browser could not complete the request with the entered API key.', 'Check that the key is active.'];
+  if (sessionStorage.getItem(OPENAI_KEY)) return ['OpenAI request failed', 'The browser could not complete the request.', 'Check your API key or network.'];
   if (!tunnel.value.trim()) return [`Add an API endpoint`, 'No API tunnel URL is configured.', 'Paste your ngrok URL into API tunnel.'];
-  if (detail.startsWith('HTTP 401') || detail.startsWith('HTTP 403')) return ['Tunnel rejected the request', 'The API returned ' + detail + '.', 'Check your ngrok access policy.'];
-  if (detail.startsWith('HTTP 404')) return [`Endpoint not found`, 'The API returned HTTP 404.', 'Make sure your API server handles ' + action + ' correctly.'];
-  return [`Could not complete request`, 'The tunnel could not be reached.', 'Check that ngrok is running and accepts requests.'];
+  if (detail.startsWith('HTTP 404')) return [`Endpoint not found`, 'The API returned HTTP 404.', 'Make sure your server handles ' + action + '.'];
+  return [`Could not complete request`, 'The tunnel could not be reached or rejected the request.', 'Error detail: ' + detail];
 };
 
 // Make Concise Logic
 $('#concise').onclick = async () => {
-  if (!canUsePrompt()) {
-    showFeedback('Rate limit reached', 'You have reached your limit of 10 prompts per hour.', 'Please try again later or log in as an Administrator.');
-    return;
-  }
+  if (!canUsePrompt()) { showFeedback('Rate limit reached', 'Limit 10 prompts/hr.', 'Try later or use Admin access.'); return; }
   const editor = $('#editor');
   const text = editor.innerText.trim();
-  if (!text) { showFeedback('Nothing to rewrite', 'Your active note is empty.', 'Write or paste text into the note, then try Make concise again.'); return; }
+  if (!text) { showFeedback('Nothing to rewrite', 'Note is empty.', 'Write text first.'); return; }
   
-  const button = $('#concise');
-  const status = $('#status');
+  const button = $('#concise'); const status = $('#status');
   button.disabled = true; button.textContent = 'Working…';
   
   try {
@@ -633,42 +610,32 @@ $('#concise').onclick = async () => {
     const response = await fetch(useOpenAI ? 'https://api.openai.com/v1/chat/completions' : apiEndpoint('rewrite'), useOpenAI ? {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
-      body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'system', content: 'Rewrite the user text to be concise while preserving its meaning. Return only the revised text.' }, { role: 'user', content: text }] })
+      body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'system', content: 'Rewrite to be concise. Return only revised text.' }, { role: 'user', content: text }] })
     } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
     
     if (!response.ok) throw new Error('HTTP ' + response.status);
     const data = await response.json();
     const revised = data.text || data.concise || data.result || data.choices?.[0]?.message?.content;
-    if (!revised) throw new Error('The rewrite response did not contain text.');
+    if (!revised) throw new Error('No text in response.');
     
-    editor.textContent = revised; 
-    edit();
+    editor.textContent = revised; edit();
     status.textContent = 'Concise version ready.'; status.className = 'status good';
     recordPrompt(); 
   } catch (error) {
     const problem = endpointProblem('rewrite', error);
-    status.textContent = problem[0]; status.className = 'status error';
-    showFeedback(...problem);
-  } finally { 
-    button.disabled = false; button.textContent = 'Make concise'; 
-  }
+    status.textContent = problem[0]; status.className = 'status error'; showFeedback(...problem);
+  } finally { button.disabled = false; button.textContent = 'Make concise'; }
 };
 
-// Audio Transcription Logic
+// Transcription Logic
 let audioRecorder, recordedChunks = [];
 const recordButton = $('#transcribe');
 recordButton.onclick = async () => {
   const status = $('#status');
   if (audioRecorder?.state === 'recording') { audioRecorder.stop(); return; }
   
-  if (!canUsePrompt()) {
-    showFeedback('Rate limit reached', 'You have reached your limit of 10 prompts per hour.', 'Please try again later or log in as an Administrator.');
-    return;
-  }
-  if (!tunnel.value.trim() && !sessionStorage.getItem(OPENAI_KEY)) { 
-    showFeedback('Setup required', 'Add an API Tunnel or OpenAI key below timeline to transcribe.', ''); 
-    return; 
-  }
+  if (!canUsePrompt()) { showFeedback('Rate limit reached', 'Limit 10 prompts/hr.', 'Try later or use Admin access.'); return; }
+  if (!tunnel.value.trim() && !sessionStorage.getItem(OPENAI_KEY)) { showFeedback('Setup required', 'Add an API Tunnel or OpenAI key.', ''); return; }
   
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -683,46 +650,36 @@ recordButton.onclick = async () => {
       try {
         const formData = new FormData();
         formData.append('file', new Blob(recordedChunks, { type: audioRecorder.mimeType || 'audio/wav' }), 'audio.wav');
-        
         const apiKey = sessionStorage.getItem(OPENAI_KEY);
         if(apiKey) formData.append('model', 'whisper-1');
 
         const response = await fetch(apiKey ? 'https://api.openai.com/v1/audio/transcriptions' : apiEndpoint('transcribe'), {
-          method: 'POST',
-          headers: apiKey ? { 'Authorization': 'Bearer ' + apiKey } : {},
-          body: formData
+          method: 'POST', headers: apiKey ? { 'Authorization': 'Bearer ' + apiKey } : {}, body: formData
         });
 
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const data = await response.json(); 
         const transcript = data.text || data.transcript || data.result;
-        if (!transcript) throw new Error('The transcription response did not contain text.');
+        if (!transcript) throw new Error('No text in transcription response.');
         
-        const editor = $('#editor'); 
-        editor.innerText += (editor.innerText ? '\n\n' : '') + transcript; 
-        edit();
-        status.textContent = 'Transcript added to your note.'; status.className = 'status good';
-        recordPrompt(); 
+        const editor = $('#editor'); editor.innerText += (editor.innerText ? '\n\n' : '') + transcript; edit();
+        status.textContent = 'Transcript added.'; status.className = 'status good'; recordPrompt(); 
       } catch (error) { 
         const problem = endpointProblem('transcription', error); 
-        status.textContent = problem[0]; status.className = 'status error'; 
-        showFeedback(...problem); 
+        status.textContent = problem[0]; status.className = 'status error'; showFeedback(...problem); 
       } finally { recordButton.disabled = false; }
     };
     
-    audioRecorder.start(); 
-    recordButton.innerHTML = '&#9632;'; 
-    status.textContent = 'Recording… click the stop button to transcribe.'; status.className = 'status';
-  } catch (error) {
-    showFeedback('Microphone unavailable', 'Allow microphone access in your browser settings.', '');
-  }
+    audioRecorder.start(); recordButton.innerHTML = '&#9632;'; 
+    status.textContent = 'Recording… stop to transcribe.'; status.className = 'status';
+  } catch (error) { showFeedback('Microphone unavailable', 'Allow mic access in browser.', ''); }
 };
 
 // Chatbot Logic
 let chatMessages = [{ role: 'system', content: 'You are SquigglyBot, a helpful assistant built into a note-taking app.' }];
 
-$('#openChatBtn').onclick = () => $('#chatDialog').showModal();
-$('#closeChatBtn').onclick = () => $('#chatDialog').close();
+$('#openChatBtn').onclick = showChat;
+$('#closeChatBtn').onclick = showApp;
 
 window.sendChatMessage = async () => {
   const input = $('#chatInput');
@@ -731,8 +688,7 @@ window.sendChatMessage = async () => {
 
   if (!canUsePrompt()) {
     showFeedback('Rate limit reached', 'You have reached your limit of 10 prompts per hour.', 'Please try again later or log in as an Administrator.');
-    $('#chatDialog').close();
-    return;
+    showApp(); return;
   }
 
   const history = $('#chatHistory');
@@ -751,7 +707,6 @@ window.sendChatMessage = async () => {
   try {
     const apiKey = sessionStorage.getItem(OPENAI_KEY);
     const useOpenAI = !!apiKey;
-    
     const payload = useOpenAI ? { model: 'gpt-4o-mini', messages: chatMessages } : { messages: chatMessages };
 
     const response = await fetch(useOpenAI ? 'https://api.openai.com/v1/chat/completions' : apiEndpoint('chat'), useOpenAI ? {
@@ -763,7 +718,15 @@ window.sendChatMessage = async () => {
     if (!response.ok) throw new Error('HTTP ' + response.status);
     const data = await response.json();
     
-    const botReply = data.choices?.[0]?.message?.content || data.reply || data.text || data.message || "I couldn't generate a response.";
+    // Robust parsing for unpredictable API responses
+    let botReply = '';
+    if (data.choices && data.choices[0] && data.choices[0].message) { botReply = data.choices[0].message.content; } 
+    else if (data.reply) { botReply = data.reply; } 
+    else if (data.text) { botReply = data.text; } 
+    else if (data.message) { botReply = data.message; }
+    else if (data.response) { botReply = data.response; }
+    else if (typeof data === 'string') { botReply = data; } 
+    else { botReply = "Unrecognized response format from server:\n" + JSON.stringify(data, null, 2).substring(0, 300); }
     
     chatMessages.push({ role: 'assistant', content: botReply });
 
@@ -772,7 +735,6 @@ window.sendChatMessage = async () => {
     botDiv.textContent = botReply;
     history.appendChild(botDiv);
     history.scrollTop = history.scrollHeight;
-    
     recordPrompt(); 
 
   } catch (error) {
@@ -788,7 +750,7 @@ window.sendChatMessage = async () => {
   }
 };
 
-// Rendering and Notes Selection
+// Rendering
 (() => {
   const selectedNotes = new Set();
   const updateSelectionLabels = () => {
